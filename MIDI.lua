@@ -1741,9 +1741,11 @@ Concatenates an array of scores into one score.
 If the scores differ in their "ticks" parameter,
 they will all get converted to millisecond-tick format.
 
-=item I<grep> (opus_or_score, channels)
+=item I<grep> (score, channels)
 
-Returns a "score", or an "opus", containing only the channels specified.
+Returns a "score" containing only the channels specified.
+(It also works on an "opus", but because of the
+incremental times the result will usually be useless.)
 The second parameter is an array of the wanted channel numbers,
 for example:
 
@@ -2027,9 +2029,9 @@ within a score (see SYNOPSIS)
 =head1 DOWNLOAD
 
 This module is available as a LuaRock in
-http://rocks.moonscript.org/modules/peterbillam
+http://luarocks.org/modules/peterbillam
 so you should be able to install it with the command:
-B<sudo luarocks --server=http://rocks.moonscript.org install midi>
+B<sudo luarocks install midi>
 
 The source is in
 http://www.pjb.com.au/comp/lua/MIDI.lua
