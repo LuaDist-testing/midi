@@ -1,8 +1,9 @@
 #!/usr/bin/lua
 --require 'DataDumper'   -- http://lua-users.org/wiki/DataDumper
 local M = {} -- public interface
-M.Version = '5.9'
-M.VersionDate = '20120504'
+M.Version = '6.0'
+M.VersionDate = '20140108'
+-- 20140108 6.0 in lua5.2 require('posix') returns the posix table
 -- 20120504 5.9 add the contents of mid_opus_tracks()
 -- 20111129 5.7 _encode handles empty tracks; score2stats num_notes_by_channel
 -- 20111111 5.6 fix patch 45 and 46 in Number2patch, should be Pizz and Harp
@@ -1136,7 +1137,8 @@ function M.play_score(score)
 	else
 		midi = M.score2midi(score)
 	end
-	pcall(function() require 'posix' end)
+	local posix  -- 6.0 in lua5.2 require posix returns the posix table
+	pcall(function() posix = require 'posix' end)
 	if posix and posix.fork then   -- 4.2
 		local pid = posix.fork()
         if pid == 0 then
