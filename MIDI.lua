@@ -1,8 +1,9 @@
 #!/usr/bin/lua
 --require 'DataDumper'   -- http://lua-users.org/wiki/DataDumper
 local M = {} -- public interface
-M.Version = '5.6'
-M.VersionDate = '26jan2011'
+M.Version = '5.7'
+M.VersionDate = '20120129'
+-- 20111129 5.7 _encode handles empty tracks; score2stats num_notes_by_channel
 -- 20111111 5.6 fix patch 45 and 46 in Number2patch, should be Pizz and Harp
 -- 20110115 5.5 add mix_opus_tracks()
 -- 20110126 5.4 "previous message repeated N times" to save space on stderr
@@ -545,7 +546,7 @@ local function _encode(events_lol)
 	local events = deepcopy(events_lol)
 
 	if not never_add_eot then -- One way or another, tack on an 'end_track'
-		if events then
+		if #events > 0 then   -- 5.7
 			local last = events[#events] -- 4.5, 4.7
 			if not (last[1] == 'end_track') then  -- no end_track already
 				if (last[1] == 'text_event' and last[3] == '') then -- 4.5,4.6
@@ -1304,6 +1305,7 @@ end
 function M.score2stats(opus_or_score)
 --[[ returns a table:
  bank_select (array of 2-element arrays {msb,lsb}),
+ num_notes_by_channel (table of numbers),
  channels_by_track (table, by track, of arrays),
  channels_total (array),
  general_midi_mode (array),
@@ -1322,6 +1324,7 @@ function M.score2stats(opus_or_score)
 	local channels_by_track = {}
 	local channels_total    = {}
 	local general_midi_mode = {}
+	local num_notes_by_channel = {} -- 5.7
 	local patches_used_by_track  = {}
 	local patches_used_total     = {}
 	local patch_changes_by_track = {}
@@ -1348,6 +1351,7 @@ function M.score2stats(opus_or_score)
 		local patch_changes_this_track = {} -- 4.7
 		for k,event in ipairs(opus_or_score[i]) do
 			if event[1] == 'note' then
+				num_notes_by_channel[event[4]] = (num_notes_by_channel[event[4]] or 0) + 1
 				if event[4] == 9 then
 					percussion[event[5]] = (percussion[event[5]] or 0) + 1
 				else
@@ -1367,6 +1371,7 @@ function M.score2stats(opus_or_score)
 				end
 			elseif event[1] == 'note_on' then
 				is_a_score = false   -- 4.6
+				num_notes_by_channel[event[3]] = (num_notes_by_channel[event[3]] or 0) + 1
 				if event[3] == 9 then
 					percussion[event[4]] = (percussion[event[4]] or 0) + 1
 				else
@@ -1429,6 +1434,7 @@ function M.score2stats(opus_or_score)
 		general_midi_mode=general_midi_mode,
 		ntracks=#opus_or_score-1,
 		nticks=nticks,
+		num_notes_by_channel=num_notes_by_channel,
 		patch_changes_by_track=patch_changes_by_track,
 		patch_changes_total=sorted_keys(patch_changes_total),
 		percussion=percussion,
@@ -1800,6 +1806,11 @@ written to a .mid file, or to stdout.
 For a description of the "opus" and "score" formats,
 see opus2midi() and score2opus().
 
+The score track is returned sorted by the end-times of the notes,
+so if you need it sorted by their start-times you have to do that yourself:
+
+  table.sort(score[itrack], function (e1,e2) return e1[2]<e2[2] end)
+
 =item I<play_score> (opus_or_score)
 
 Converts the "score" to midi, and feeds it into 'aplaymidi -'.
@@ -1851,6 +1862,7 @@ Returns a table of some basic stats about the score, like:
  general_midi_mode (array),
  ntracks,
  nticks,
+ num_notes_by_channel (table of numbers)
  patch_changes_by_track (table of arrays),
  patch_changes_total (array),
  percussion (a dictionary histogram of channel-9 events),

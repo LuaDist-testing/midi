@@ -240,6 +240,12 @@ written to a .mid file, or to stdout.</p>
 For a description of the <I>opus</I> and <I>score</I> formats,
 see <a href="#opus2midi">opus2midi()</a>
 and <a href="#score2opus">score2opus()</a>.
+<BR>
+The score track is returned sorted by the end-times of the notes,
+so if you need it sorted by their start-times you have to do that yourself:
+<BR><CODE>
+ &nbsp; table.sort(score[itrack], function (e1,e2) return e1[2]&lt;e2[2] end)
+</CODE>
 </p>
 </dd>
 
@@ -302,6 +308,7 @@ except that in a score:<BR>
  general_midi_mode (array),
  ntracks,
  nticks,
+ num_notes_by_channel (table of numbers)
  patch_changes_by_track (table of tables),
  patch_changes_total (array),
  percussion (a dictionary histogram of channel-9 events),
