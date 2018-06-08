@@ -3,6 +3,7 @@
 local M = {} -- public interface
 M.Version = 'VERSION'
 M.VersionDate = 'DATESTAMP'
+-- 20150920 6.4 segment respects a set_tempo exactly on the start time
 -- 20150628 6.3 absent any set_tempo, default is 120bpm (see MIDI filespec 1.1)
 -- 20150422 6.2 works with lua5.3
 -- 20140609 6.1 switch pod and doc over to using moonrocks 
@@ -1497,19 +1498,19 @@ function M.segment(...)
 			local new_track = {}
 			local channel2patch_num = {} -- recentest patchchange before start
 			local channel2patch_time = {}
-			local set_tempo_num = 500000 -- recentest tempochange 6.3
+			local set_tempo_num = 500010 -- recentest tempochange 6.3
 			local set_tempo_time = 0
 			local earliest_note_time = endt
 			for k,event in ipairs(score[i]) do
 				if event[1] == 'patch_change' then
 					local patch_time = channel2patch_time[event[3]] or 0 -- 4.7
-					if event[2] < start and event[2] >= patch_time then  -- 2.0
+					if event[2]<=start and event[2]>=patch_time then  -- 2.0
 						channel2patch_num[event[3]]  = event[4]
 						channel2patch_time[event[3]] = event[2]
 					end
 				end
-				if event[1] == 'set_tempo' then
-					if (event[2] < start) and (event[2] >= set_tempo_time) then
+				if event[1] == 'set_tempo' then   -- 6.4 <=start not <start
+					if (event[2]<=start) and (event[2]>=set_tempo_time) then
 						set_tempo_num  = event[3]
 						set_tempo_time = event[2]
 					end
