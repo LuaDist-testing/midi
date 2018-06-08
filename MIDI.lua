@@ -1,8 +1,10 @@
 #!/usr/bin/lua
 --require 'DataDumper'   -- http://lua-users.org/wiki/DataDumper
 local M = {} -- public interface
-M.Version = '5.4'
+M.Version = '5.6'
 M.VersionDate = '26jan2011'
+-- 20111111 5.6 fix patch 45 and 46 in Number2patch, should be Pizz and Harp
+-- 20110115 5.5 add mix_opus_tracks()
 -- 20110126 5.4 "previous message repeated N times" to save space on stderr
 -- 20110126 5.3 robustness fix if one note_on and multiple note_offs
 -- 20110125 5.2 opus2score terminates unended notes at the end of the track
@@ -811,8 +813,8 @@ M.Number2patch = readOnly{   -- General MIDI patch numbers:
 [42]='Cello',
 [43]='Contrabass',
 [44]='Tremolo Strings',
-[45]='Orchestral Strings',
-[46]='Orchestral Strings',
+[45]='Pizzicato Strings',
+[46]='Orchestral Harp',
 [47]='Timpani',
 [48]='String Ensemble 1',
 [49]='String Ensemble 2',
@@ -1040,6 +1042,9 @@ function M.merge_scores(scores)
 		end
 	end
 	return output_score
+end
+
+function M.mix_opus_tracks(input_tracks) -- 5.5
 end
 
 function M.mix_scores(input_scores)
@@ -1732,6 +1737,16 @@ they will all get converted to millisecond-tick format.
 merge_scores attempts to resolve channel-conflicts,
 but there are of course only 15 available channels...
 
+=item I<mix_opus_tracks> (tracks)
+
+Mixes an array of opus tracks into one track.
+A mixed track cannot be un-mixed.
+It is assumed that the tracks share the same I<ticks> parameter
+and the same tempo.
+Mixing score-tracks is trivial (just insert all the events into one array).
+Mixing opus-tracks is only slightly harder,
+but it's common enough that a dedicated function is useful.
+
 =item I<mix_scores> (array_of_scores)
 
 Mixes an array of scores into one one-track score.
@@ -1983,14 +1998,23 @@ within a score (see SYNOPSIS)
 
 =head1 DOWNLOAD
 
-This module will soon be available as a LuaRock...
+This module is available as a LuaRock in
+http://luarocks.org/repositories/rocks/index.html#midi
+so you should be able to install it with the command:
+B<sudo luarocks install midi>
 
-The source is available in
+The source is in
 http://www.pjb.com.au/comp/lua/MIDI.lua
-for you to install in your LUA_PATH
+for you to install by hand in your LUA_PATH
 
 The test script used during development is
 http://www.pjb.com.au/comp/lua/test_mi.lua
+which requires the DataDumper module.
+
+You should be able to install the luaposix module with:
+B<sudo luarocks install luaposix>
+or, on debian, with:
+B<sudo aptitude install liblua5.1-posix1>
 
 =head1 AUTHOR
 

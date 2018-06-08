@@ -81,6 +81,7 @@ CONTENT="MIDI, Lua, module, luarock, score, opus">
 <a href="#concatenate_scores"><B>concatenate_scores()</B></a>, &nbsp;
 <a href="#grep"><B>grep()</B></a>, &nbsp;
 <a href="#merge_scores"><B>merge_scores()</B></a>, &nbsp;
+<a href="#mix_opus_tracks"><B>mix_opus_tracks()</B></a>, &nbsp;
 <a href="#mix_scores"><B>mix_scores()</B></a>, &nbsp;
 <a href="#midi2opus"><B>midi2opus()</B></a>, &nbsp;
 <a href="#midi2score"><B>midi2score()</B></a>, &nbsp;
@@ -123,6 +124,7 @@ www.pjb.com.au/midi/MIDI.html</A>
 <a href="#concatenate_scores"><B>concatenate_scores()</B></a>, &nbsp;
 <a href="#grep"><B>grep()</B></a>, &nbsp;
 <a href="#merge_scores"><B>merge_scores()</B></a>, &nbsp;
+<a href="#mix_opus_tracks"><B>mix_opus_tracks()</B></a>, &nbsp;
 <a href="#mix_scores"><B>mix_scores()</B></a>, &nbsp;
 <a href="#midi2opus"><B>midi2opus()</B></a>, &nbsp;
 <a href="#midi2score"><B>midi2score()</B></a>, &nbsp;
@@ -146,7 +148,6 @@ If the scores differ in their <I>ticks</I> parameter,
 they will all get converted to millisecond-tick format.</p>
 </dd>
 <dt><strong><a name="grep" class="item"><em>grep</em> (opus_or_score, channels)</a></strong></dt>
-
 <dd>
 <p>Returns a <I>score</I>, or an <I>opus</I>, containing only the channels specified.
 The second parameter is an array of the wanted channel numbers,
@@ -165,8 +166,17 @@ they will all get converted to millisecond-tick format.
 merge_scores attempts to resolve channel-conflicts,
 but there are of course only 15 available channels...</p>
 </dd>
+<dt><strong><a name="mix_opus_tracks" class="item"><em>mix_opus_tracks</em> (array_of_tracks)</a></strong></dt>
+<dd>
+<p>Mixes an array of tracks into one track.  A mixed track
+cannot be un-mixed.  It is assumed that the tracks share the same
+ticks parameter and the same tempo.
+Mixing score-tracks is trivial (just insert all events into one array).
+Mixing opus-tracks is only slightly harder, but it's common enough
+that a dedicated function is useful.
+</p>
+</dd>
 <dt><strong><a name="mix_scores" class="item"><em>mix_scores</em> (array_of_scores)</a></strong></dt>
-
 <dd>
 <p>Mixes an array of scores into one one-track score.
 A mixed score cannot be un-mixed.
@@ -457,7 +467,7 @@ This module is available as a LuaRock in
 <A HREF="http://luarocks.org/repositories/rocks/index.html#midi">
 luarocks.org/repositories/rocks</A><BR>
 so you should be able to install it with the command:
-<CODE> &nbsp; <B>luarocks install midi</B></CODE>
+<CODE> &nbsp; <B>sudo luarocks install midi</B></CODE>
 </p><p>
 The source is in
 <a href="http://www.pjb.com.au/comp/lua/MIDI.lua">
@@ -471,9 +481,9 @@ which requires the
 <A HREF="http://lua-users.org/wiki/DataDumper">DataDumper.lua</A> module.
 </p><p>
 You should be able to install the <I>luaposix</I> module with:
-<CODE> &nbsp; <B>luarocks install luaposix</B></CODE><BR>
+<CODE> &nbsp; <B>sudo luarocks install luaposix</B></CODE><BR>
 or, on <I>debian</I>, with:
-<CODE> &nbsp; <B>aptitude install liblua5.1-posix1</B></CODE>
+<CODE> &nbsp; <B>sudo aptitude install liblua5.1-posix1</B></CODE>
 </p>
 <p>
 </p>
@@ -492,6 +502,7 @@ or, on <I>debian</I>, with:
  <a href="http://www.pjb.com.au/midi/MIDI.html">www.pjb.com.au/midi/MIDI.html</a>
  <a href="http://www.pjb.com.au/midi/free/MIDI.py">www.pjb.com.au/midi/free/MIDI.py</a>
  <a href="http://www.pjb.com.au/muscript/gm.html">www.pjb.com.au/muscript/gm.html</a>
+ <a href="http://www.pjb.com.au/comp/lua/midialsa.html">www.pjb.com.au/comp/lua/midialsa.html</a>
  <A HREF="http://www.michael-gogins.com">www.michael-gogins.com</A>
 </pre>
 
