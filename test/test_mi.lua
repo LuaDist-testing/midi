@@ -519,14 +519,6 @@ local correct_mix_tracks = {
 
 local midi1 = MIDI.opus2midi(opus1)
 ok(equals(midi1, correct_midi1) and equals(opus1, opus), 'opus2midi')
---local f = assert(io.open('t.mid', 'wb'))
---f:write(midi1)
---f:close()
---os.execute('hd t.mid > t.hd')
---local f = assert(io.open('tc.mid', 'wb'))
---f:write(correct_midi1)
---f:close()
---os.execute('hd tc.mid > tc.hd')
 
 local opus2 = MIDI.midi2opus(correct_midi1)
 ok(equals(opus1, opus2) and equals(correct_midi, correct_midi1), 'midi2opus')
@@ -541,8 +533,6 @@ local opus4 = MIDI.to_millisecs(opus1)
 ok(equals(opus4,correct_ms) and equals(opus1,opus), 'to_millisecs')
 --  warn('opus4='..DataDumper(opus4))
 --  warn('correct_ms='..DataDumper(correct_ms))
---  warn('opus1='..DataDumper(opus1))
---  warn('opus='..DataDumper(opus))
 
 
 local grep1 = MIDI.grep(score1, {4,7})
@@ -554,13 +544,8 @@ ok(equals(grep2, correct_grep_opus) and equals(opus1, opus), 'grep (opus)')
 
 local cat1 = MIDI.concatenate_scores({score1, score2})
 ok(equals(cat1, correct_cat1) and equals(score1, correct_score) and equals(score2, orig_score2), 'concatenate scores')
--- warn('score1='..DataDumper(score1))
--- warn('to_millisecs(score1)='..DataDumper(MIDI.opus2score(MIDI.to_millisecs(MIDI.score2opus(score1)))))
--- warn('score2='..DataDumper(score2))
--- warn('cat1='..DataDumper(cat1))
--- warn('correct_cat1='..DataDumper(correct_cat1))
-ok(equals(score1, correct_score), 'original score1 unchanged')
-ok(equals(score2, orig_score2), 'original score2 unchanged')
+--ok(equals(score1, correct_score), 'original score1 unchanged')
+--ok(equals(score2, orig_score2), 'original score2 unchanged')
 
 local merge1 = MIDI.merge_scores({score1, score2})
 ok(equals(merge1, correct_merge1) and equals(score1, correct_score) and equals(score2, orig_score2), 'merge scores')
@@ -628,14 +613,30 @@ ok(equals(score10, correct_segment) and equals(score2, orig_score2),
 -- warn('correct_segment='..DataDumper(correct_segment))
 -- os.exit()
 
+local function pairsByKeys(t,f)   -- Programming in Lua p.173
+  local a = {}
+  for n in pairs(t) do a[#a+1] = n end
+  table.sort(a,f)
+  local i = 0
+  return function() i = i+1; return a[i], t[a[i]] end
+end
+function table2sortedarray (t)
+  local s = {' :'}
+  for k,v in pairsByKeys(t) do
+    if type(v) == 'table' then
+      table.insert(s, k..table2sortedarray(v))
+    else
+      table.insert(s, k..'    '..tostring(v))
+    end
+  end
+  return table.concat(s, '\n')
+end
+
 local merge1 = deepcopy(correct_merge1)
 local stats = MIDI.score2stats(merge1)
-stats['pitches'] = nil
-correct_stats['pitches'] = nil
--- print('stats='..DataDumper(stats))
--- print('correct_stats='..DataDumper(correct_stats))
-ok(equals(stats, correct_stats) and equals(merge1, correct_merge1),
- 'score2stats')
+s1=table2sortedarray(stats)
+s2=table2sortedarray(correct_stats)
+ok(equals(s1,s2) and equals(merge1,correct_merge1),'score2stats')
 
 local seq_midi = MIDI.opus2midi(seq_opus)
 --local f = assert(io.open('t.mid', 'wb'))

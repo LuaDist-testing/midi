@@ -3,6 +3,7 @@
 local M = {} -- public interface
 M.Version = 'VERSION'
 M.VersionDate = 'DATESTAMP'
+-- 20160702 6.7 to_millisecs() now handles set_tempo across multiple Tracks
 -- 20150921 6.5 segment restores controllers as well as patch and tempo
 -- 20150920 6.4 segment respects a set_tempo exactly on the start time
 -- 20150628 6.3 absent any set_tempo, default is 120bpm (see MIDI filespec 1.1)
@@ -1646,32 +1647,61 @@ function M.timeshift(...)
 	return new_score
 end
 
-function M.to_millisecs(old_opus)
+function M.to_millisecs(old_opus)   -- 6.7
 	if old_opus == nil then return {1000,{},}; end
 	local old_tpq  = old_opus[1]
 	local new_opus = {1000,}
-	local millisec_per_old_tick = 500.0 / old_tpq -- will be rounded later 6.3
+	-- 6.7 first go through building a dict of set_tempos by absolute-tick
+	local ticks2tempo = {}
 	local itrack = 2
 	while itrack <= #old_opus do
-		local millisec_so_far = 0.0
-		local previous_millisec_so_far = 0.0
-		local new_track = {{'set_tempo',0,1000000},}  -- new "crochet" is 1 sec
+		local ticks_so_far = 0
 		local k; for k,old_event in ipairs(old_opus[itrack]) do
 			if old_event[1] == 'note' then
 				warn('to_millisecs needs an opus, not a score')
 				clean_up_warnings()
 				return {1000,{},}
 			end
-			local new_event = copy(old_event) -- 4.7
-			millisec_so_far = millisec_so_far +
-			 (millisec_per_old_tick * old_event[2])
-			new_event[2] = math.floor(0.5 + millisec_so_far - previous_millisec_so_far)
+			ticks_so_far = ticks_so_far + old_event[2]
 			if old_event[1] == 'set_tempo' then
-				millisec_per_old_tick = old_event[3] / (1000.0 * old_tpq)
-			else
-				previous_millisec_so_far = millisec_so_far
+				ticks2tempo[ticks_so_far] = old_event[3]
+			end
+		end
+		itrack = itrack + 1
+	end
+	--  then get the sorted-array of their keys
+	local tempo_ticks = sorted_keys(ticks2tempo)
+	--  then go through converting to millisec, testing if the next
+	--  set_tempo lies before the next track-event, and using it if so.
+	local itrack = 2
+	while itrack <= #old_opus do
+		local ms_per_old_tick = 500.0 / old_tpq -- will be rounded later 6.3
+		local i_tempo_ticks = 1
+		local ticks_so_far = 0
+		local ms_so_far = 0.0
+		local previous_ms_so_far = 0.0
+		local new_track = {{'set_tempo',0,1000000},}  -- new "crochet" is 1 sec
+		local k; for k,old_event in ipairs(old_opus[itrack]) do
+			-- detect if ticks2tempo has something before this event
+			-- If ticks2tempo is at the same time, don't handle it yet.
+			local event_delta_ticks = old_event[2]
+			if i_tempo_ticks <= #tempo_ticks and
+			  tempo_ticks[i_tempo_ticks] < (ticks_so_far + old_event[2]) then
+				local delta_ticks = tempo_ticks[i_tempo_ticks] - ticks_so_far
+				ms_so_far = ms_so_far + (ms_per_old_tick * delta_ticks)
+				ticks_so_far = tempo_ticks[i_tempo_ticks]
+				ms_per_old_tick = ticks2tempo[ticks_so_far] / (1000.0*old_tpq)
+				i_tempo_ticks = i_tempo_ticks + 1
+				event_delta_ticks = event_delta_ticks - delta_ticks
+			end  -- now handle the new event
+			local new_event = copy(old_event) -- 4.7
+			ms_so_far = ms_so_far + (ms_per_old_tick * old_event[2])  -- NO!
+			new_event[2] = math.floor(0.5 + ms_so_far - previous_ms_so_far)
+			if old_event[1] ~= 'set_tempo' then -- set_tempos are already known
+				previous_ms_so_far = ms_so_far
 				new_track[#new_track+1] = new_event
 			end
+			ticks_so_far = ticks_so_far + event_delta_ticks
 		end
 		new_opus[#new_opus+1] = new_track
 		itrack = itrack + 1
@@ -2071,8 +2101,6 @@ which requires the DataDumper module.
 
 You should be able to install the luaposix module with:
 B<sudo luarocks install luaposix>
-or, on debian, with:
-B<sudo aptitude install liblua5.1-posix1>
 
 =head1 AUTHOR
 
