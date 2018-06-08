@@ -1,8 +1,10 @@
 #!/usr/bin/lua
 --require 'DataDumper'   -- http://lua-users.org/wiki/DataDumper
 local M = {} -- public interface
-M.Version = '6.1'
-M.VersionDate = '20140609'
+M.Version = 'VERSION'
+M.VersionDate = 'DATESTAMP'
+-- 20150628 6.3 absent any set_tempo, default is 120bpm (see MIDI filespec 1.1)
+-- 20150422 6.2 works with lua5.3
 -- 20140609 6.1 switch pod and doc over to using moonrocks 
 -- 20140108 6.0 in lua5.2 require('posix') returns the posix table
 -- 20120504 5.9 add the contents of mid_opus_tracks()
@@ -903,6 +905,8 @@ M.Number2patch = readOnly{   -- General MIDI patch numbers:
 }
 
 M.Notenum2percussion = readOnly{   -- General MIDI Percussion (on Channel 9):
+[33]='Metronome Click',
+[34]='Metronome Bell',
 [35]='Acoustic Bass Drum',
 [36]='Bass Drum 1',
 [37]='Side Stick',
@@ -1493,7 +1497,7 @@ function M.segment(...)
 			local new_track = {}
 			local channel2patch_num = {} -- recentest patchchange before start
 			local channel2patch_time = {}
-			local set_tempo_num = 1000000 -- recentest tempochange before start
+			local set_tempo_num = 500000 -- recentest tempochange 6.3
 			local set_tempo_time = 0
 			local earliest_note_time = endt
 			for k,event in ipairs(score[i]) do
@@ -1631,7 +1635,7 @@ function M.to_millisecs(old_opus)
 	if old_opus == nil then return {1000,{},}; end
 	local old_tpq  = old_opus[1]
 	local new_opus = {1000,}
-	local millisec_per_old_tick = 1000.0 / old_tpq  -- will be rounded later
+	local millisec_per_old_tick = 500.0 / old_tpq -- will be rounded later 6.3
 	local itrack = 2
 	while itrack <= #old_opus do
 		local millisec_so_far = 0.0
@@ -1998,6 +2002,15 @@ Events (in an "opus" structure):
  tempo = microseconds per crochet (quarter-note), 0 to 16777215
  text = a string of 0 or more bytes of of ASCII text
  ticks = the number of ticks per crochet (quarter-note)
+
+In I<sysex_f0> events, the I<raw> data must not start with a \xF0
+byte, since this gets added automatically;
+but it must end with an explicit \xF7 byte!
+In the very unlikely case that you ever need to split I<sysex> data
+into one I<sysex_f0> followed by one or more I<sysex_f7>s, then
+only the last of those I<sysex_f7> events must end with the explicit \xF7
+byte (again, the I<raw> data of individual I<sysex_f7> events
+must not start with any \xF7 byte, since this gets added automatically).
 
 =head1 PUBLIC-ACCESS TABLES
 
