@@ -1,16 +1,16 @@
 -- This file was automatically generated for the LuaDist project.
 
 package = "midi"
-version = "4.8-1"
+version = "5.0-1"
 -- LuaDist source
 source = {
-  tag = "4.8-1",
+  tag = "5.0-1",
   url = "git://github.com/LuaDist-testing/midi.git"
 }
 -- Original source
 -- source = {
---    url = "http://www.pjb.com.au/comp/lua/MIDI-4.8.tar.gz",
---    md5 = "61d06b11464eecdf695f55f9fd20c994"
+--    url = "http://www.pjb.com.au/comp/lua/MIDI-5.0.tar.gz",
+--    md5 = "1e609fc6a043a6771a24eda511bf6f9b"
 -- }
 description = {
    summary = "Reading, writing and manipulating MIDI data",

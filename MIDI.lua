@@ -1,8 +1,10 @@
 #!/usr/bin/lua
 --require 'DataDumper'   -- http://lua-users.org/wiki/DataDumper
 local M = {} -- public interface
-M.Version = '4.8'
-M.VersionDate = '10jan2011'
+M.Version = '5.0'
+M.VersionDate = '22jan2011'
+-- 20110122 5.0 sysex2midimode.get pythonism eliminated
+-- 20110119 4.9 copyright_text_event "time" item was missing
 -- 20110110 4.8 note_on with velocity=0 treated as a note-off
 -- 20110109 4.7 many global vars localised, passes lualint :-)
 -- 20110108 4.6 duplicate int2sevenbits removed, passes lualint -r
@@ -298,8 +300,8 @@ The options:
 			-- Defined text events ------
 			elseif command == 1 then
 				E = {'text_event', time, string.sub(trackdata,i,i+length-1)}
-			elseif command == 2 then
-				E = {'copyright_text_event', string.sub(trackdata,i,i+length-1)}
+			elseif command == 2 then  -- 4.9
+				E = {'copyright_text_event', time, string.sub(trackdata,i,i+length-1)}
 			elseif command == 3 then
 				E = {'track_name',time, string.sub(trackdata,i,i+length-1)}
 			elseif command == 4 then
@@ -683,8 +685,6 @@ local function _encode(events_lol)
 			else
 				if not unknown_callback then
 					warn("Unknown event: "..tostring(event))
-					-- To surpress complaint here, just set
-					--  'unknown_callback' => sub { return () }
 				end
 				break
 			end
@@ -1065,7 +1065,8 @@ function M.midi2opus(s)
 		local track_length = fourbytes2int(string.sub(s,i,i+3)); i = i+4
 		if track_length > #s then
 			warn('midi2opus: track_length '..track_length..' is too large')
-			return {}
+			-- return {1000,{},}  -- 4.9
+			return my_opus
 		end
 		local my_midi_track = string.sub(s, i, i+track_length-1) -- 4.7
 		i = i+track_length
@@ -1347,7 +1348,7 @@ function M.score2stats(opus_or_score)
 				end
 			elseif event[1] == 'sysex_f0' then
 				if sysex2midimode[event[3]] then
-				table.insert(general_midi_mode, sysex2midimode.get(event[3]))
+				table.insert(general_midi_mode,sysex2midimode[event[3]]) -- 5.0
 				end
 			end
 			if is_a_score then
