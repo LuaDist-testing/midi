@@ -130,9 +130,9 @@ local correct_ms = {
   {
     { "set_tempo", 0, 1000000 },
     { "patch_change", 0, 1, 74 },
-    { "key_signature", 42, -2, 46 },
-    { "time_signature", 31, 4, 5, 6, 7 },
-    { "note_on", 104, 1, 55, 100 },
+    { "key_signature", 21, -2, 46 },
+    { "time_signature", 16, 4, 5, 6, 7 },
+    { "note_on", 78, 1, 55, 100 },
     { "key_after_touch", 73, 7, 8, 9 },
     { "channel_after_touch", 94, 11, 12 },
     { "pitch_wheel_change", 135, 14, -2100 },
@@ -197,6 +197,7 @@ local correct_grep_opus = {
 local orig_score2 = {
   1000,
   {
+    { "set_tempo", 0, 1000000 },
     { "patch_change", 20, 1, 19 },
     { "text_event", 50, "organ part" },
     { "note", 200, 410, 1, 50, 80 },
@@ -223,44 +224,44 @@ correct_cat1 = {
   {
     { "set_tempo", 0, 1000000 },
     { "patch_change", 0, 1, 74 },
-    { "key_signature", 42, -2, 46 },
-    { "time_signature", 73, 4, 5, 6, 7 },
-    { "key_after_touch", 250, 7, 8, 9 },
-    { "channel_after_touch", 344, 11, 12 },
-    { "pitch_wheel_change", 479, 14, -2100 },
-    { "text_event", 646, "some enchanted evening" },
-    { "track_name", 813, "some enchanted evening" },
-    { "smpte_offset", 990, 18, 19, 20, 21, 22 },
-    { "note", 177, 1813, 1, 55, 100 },
-    { "marker", 2063, "hello world" },
-    { "control_change", 2073, 1, 10, 126 },
-    { "note", 2073, 1000, 1, 59, 100 },
-    { "sequencer_specific", 4083, "yes, we have no bananas" },
-    { "raw_meta_event", 5104, 99, "no, we have yes bananas" },
-    { "sysex_f0", 6146, "I met a man whose name was time" },
-    { "sysex_f7", 7198, "He said, I must be going" },
-    { "song_position", 17625, 16000 },
-    { "song_select", 18708, 104 },
-    { "tune_request", 19802 },
-    { "set_tempo", 19802, 1000000 },
-    { "patch_change", 19822, 1, 19 },
-    { "text_event", 19852, "organ part" },
-    { "note", 20002, 410, 1, 50, 80 },
-    { "note", 20202, 610, 1, 53, 85 },
-    { "note", 20402, 810, 1, 56, 90 },
-    { "note", 20602, 1010, 1, 59, 95 },
-    { "note", 20802, 2010, 1, 62, 100 },
-    { "note", 21802, 4010, 1, 65, 105 },
-    { "note", 23802, 6010, 1, 68, 110 },
-    { "note", 25802, 8010, 1, 71, 115 },
-    { "note", 27802, 10010, 1, 74, 120 },
-    { "note", 29802, 11990, 1, 70, 115 },
-    { "note", 29802, 11990, 1, 66, 110 },
-    { "note", 31802, 14010, 1, 62, 105 },
-    { "note", 33802, 16010, 1, 58, 100 },
-    { "note", 35802, 18010, 1, 54, 90 },
-    { "note", 37802, 18510, 1, 50, 80 },
-    { "note", 38302, 18990, 1, 38, 70 } 
+    { "key_signature", 21, -2, 46 },
+    { "time_signature", 37, 4, 5, 6, 7 },
+    { "key_after_touch", 188, 7, 8, 9 },
+    { "channel_after_touch", 282, 11, 12 },
+    { "pitch_wheel_change", 417, 14, -2100 },
+    { "text_event", 584, "some enchanted evening" },
+    { "track_name", 751, "some enchanted evening" },
+    { "smpte_offset", 928, 18, 19, 20, 21, 22 },
+    { "note", 115, 1813, 1, 55, 100 },
+    { "marker", 2001, "hello world" },
+    { "control_change", 2011, 1, 10, 126 },
+    { "note", 2011, 1000, 1, 59, 100 },
+    { "sequencer_specific", 4021, "yes, we have no bananas" },
+    { "raw_meta_event", 5042, 99, "no, we have yes bananas" },
+    { "sysex_f0", 6084, "I met a man whose name was time" },
+    { "sysex_f7", 7136, "He said, I must be going" },
+    { "song_position", 17563, 16000 },
+    { "song_select", 18646, 104 },
+    { "tune_request", 19740 },
+    { "set_tempo", 19740, 1000000 },
+    { "patch_change", 19760, 1, 19 },
+    { "text_event", 19790, "organ part" },
+    { "note", 19940, 410, 1, 50, 80 },
+    { "note", 20140, 610, 1, 53, 85 },
+    { "note", 20340, 810, 1, 56, 90 },
+    { "note", 20540, 1010, 1, 59, 95 },
+    { "note", 20740, 2010, 1, 62, 100 },
+    { "note", 21740, 4010, 1, 65, 105 },
+    { "note", 23740, 6010, 1, 68, 110 },
+    { "note", 25740, 8010, 1, 71, 115 },
+    { "note", 27740, 10010, 1, 74, 120 },
+    { "note", 29740, 11990, 1, 70, 115 },
+    { "note", 29740, 11990, 1, 66, 110 },
+    { "note", 31740, 14010, 1, 62, 105 },
+    { "note", 33740, 16010, 1, 58, 100 },
+    { "note", 35740, 18010, 1, 54, 90 },
+    { "note", 37740, 18510, 1, 50, 80 },
+    { "note", 38240, 18990, 1, 38, 70 } 
   } 
 }
 local correct_merge1 = {
@@ -268,25 +269,25 @@ local correct_merge1 = {
   {
     { "set_tempo", 0, 1000000 },
     { "patch_change", 0, 1, 74 },
-    { "key_signature", 42, -2, 46 },
-    { "time_signature", 73, 4, 5, 6, 7 },
-    { "key_after_touch", 250, 7, 8, 9 },
-    { "channel_after_touch", 344, 11, 12 },
-    { "pitch_wheel_change", 479, 14, -2100 },
-    { "text_event", 646, "some enchanted evening" },
-    { "track_name", 813, "some enchanted evening" },
-    { "smpte_offset", 990, 18, 19, 20, 21, 22 },
-    { "note", 177, 1813, 1, 55, 100 },
-    { "marker", 2063, "hello world" },
-    { "control_change", 2073, 1, 10, 126 },
-    { "note", 2073, 1000, 1, 59, 100 },
-    { "sequencer_specific", 4083, "yes, we have no bananas" },
-    { "raw_meta_event", 5104, 99, "no, we have yes bananas" },
-    { "sysex_f0", 6146, "I met a man whose name was time" },
-    { "sysex_f7", 7198, "He said, I must be going" },
-    { "song_position", 17625, 16000 },
-    { "song_select", 18708, 104 },
-    { "tune_request", 19802 } 
+    { "key_signature", 21, -2, 46 },
+    { "time_signature", 37, 4, 5, 6, 7 },
+    { "key_after_touch", 188, 7, 8, 9 },
+    { "channel_after_touch", 282, 11, 12 },
+    { "pitch_wheel_change", 417, 14, -2100 },
+    { "text_event", 584, "some enchanted evening" },
+    { "track_name", 751, "some enchanted evening" },
+    { "smpte_offset", 928, 18, 19, 20, 21, 22 },
+    { "note", 115, 1813, 1, 55, 100 },
+    { "marker", 2001, "hello world" },
+    { "control_change", 2011, 1, 10, 126 },
+    { "note", 2011, 1000, 1, 59, 100 },
+    { "sequencer_specific", 4021, "yes, we have no bananas" },
+    { "raw_meta_event", 5042, 99, "no, we have yes bananas" },
+    { "sysex_f0", 6084, "I met a man whose name was time" },
+    { "sysex_f7", 7136, "He said, I must be going" },
+    { "song_position", 17563, 16000 },
+    { "song_select", 18646, 104 },
+    { "tune_request", 19740 } 
   },
   {
     { "set_tempo", 0, 1000000 },
@@ -315,25 +316,25 @@ local correct_mix1 = {
   {
     { "set_tempo", 0, 1000000 },
     { "patch_change", 0, 1, 74 },
-    { "key_signature", 42, -2, 46 },
-    { "time_signature", 73, 4, 5, 6, 7 },
-    { "key_after_touch", 250, 7, 8, 9 },
-    { "channel_after_touch", 344, 11, 12 },
-    { "pitch_wheel_change", 479, 14, -2100 },
-    { "text_event", 646, "some enchanted evening" },
-    { "track_name", 813, "some enchanted evening" },
-    { "smpte_offset", 990, 18, 19, 20, 21, 22 },
-    { "note", 177, 1813, 1, 55, 100 },
-    { "marker", 2063, "hello world" },
-    { "control_change", 2073, 1, 10, 126 },
-    { "note", 2073, 1000, 1, 59, 100 },
-    { "sequencer_specific", 4083, "yes, we have no bananas" },
-    { "raw_meta_event", 5104, 99, "no, we have yes bananas" },
-    { "sysex_f0", 6146, "I met a man whose name was time" },
-    { "sysex_f7", 7198, "He said, I must be going" },
-    { "song_position", 17625, 16000 },
-    { "song_select", 18708, 104 },
-    { "tune_request", 19802 },
+    { "key_signature", 21, -2, 46 },
+    { "time_signature", 37, 4, 5, 6, 7 },
+    { "key_after_touch", 188, 7, 8, 9 },
+    { "channel_after_touch", 282, 11, 12 },
+    { "pitch_wheel_change", 417, 14, -2100 },
+    { "text_event", 584, "some enchanted evening" },
+    { "track_name", 751, "some enchanted evening" },
+    { "smpte_offset", 928, 18, 19, 20, 21, 22 },
+    { "note", 115, 1813, 1, 55, 100 },
+    { "marker", 2001, "hello world" },
+    { "control_change", 2011, 1, 10, 126 },
+    { "note", 2011, 1000, 1, 59, 100 },
+    { "sequencer_specific", 4021, "yes, we have no bananas" },
+    { "raw_meta_event", 5042, 99, "no, we have yes bananas" },
+    { "sysex_f0", 6084, "I met a man whose name was time" },
+    { "sysex_f7", 7136, "He said, I must be going" },
+    { "song_position", 17563, 16000 },
+    { "song_select", 18646, 104 },
+    { "tune_request", 19740 },
     { "set_tempo", 0, 1000000 },
     { "patch_change", 20, 1, 19 },
     { "text_event", 50, "organ part" },
@@ -358,6 +359,7 @@ local correct_mix1 = {
 local correct_score4 = {
   1000,
   {
+    { "set_tempo", 0, 1000000 },
     { "patch_change", 70, 1, 19 },
     { "text_event", 100, "organ part" },
     { "note", 250, 410, 1, 50, 80 },
@@ -381,29 +383,31 @@ local correct_score4 = {
 local correct_score6 = {
   1000,
   {
-    { "patch_change", 0, 1, 19 },
-    { "text_event", 30, "organ part" },
-    { "note", 180, 410, 1, 50, 80 },
-    { "note", 380, 610, 1, 53, 85 },
-    { "note", 580, 810, 1, 56, 90 },
-    { "note", 780, 1010, 1, 59, 95 },
-    { "note", 980, 2010, 1, 62, 100 },
-    { "note", 1980, 4010, 1, 65, 105 },
-    { "note", 3980, 6010, 1, 68, 110 },
-    { "note", 5980, 8010, 1, 71, 115 },
-    { "note", 7980, 10010, 1, 74, 120 },
-    { "note", 9980, 11990, 1, 70, 115 },
-    { "note", 9980, 11990, 1, 66, 110 },
-    { "note", 11980, 14010, 1, 62, 105 },
-    { "note", 13980, 16010, 1, 58, 100 },
-    { "note", 15980, 18010, 1, 54, 90 },
-    { "note", 17980, 18510, 1, 50, 80 },
-    { "note", 18480, 18990, 1, 38, 70 } 
+    { "set_tempo", 0, 1000000 },
+    { "patch_change", 20, 1, 19 },
+    { "text_event", 50, "organ part" },
+    { "note", 200, 410, 1, 50, 80 },
+    { "note", 400, 610, 1, 53, 85 },
+    { "note", 600, 810, 1, 56, 90 },
+    { "note", 800, 1010, 1, 59, 95 },
+    { "note", 1000, 2010, 1, 62, 100 },
+    { "note", 2000, 4010, 1, 65, 105 },
+    { "note", 4000, 6010, 1, 68, 110 },
+    { "note", 6000, 8010, 1, 71, 115 },
+    { "note", 8000, 10010, 1, 74, 120 },
+    { "note", 10000, 11990, 1, 70, 115 },
+    { "note", 10000, 11990, 1, 66, 110 },
+    { "note", 12000, 14010, 1, 62, 105 },
+    { "note", 14000, 16010, 1, 58, 100 },
+    { "note", 16000, 18010, 1, 54, 90 },
+    { "note", 18000, 18510, 1, 50, 80 },
+    { "note", 18500, 18990, 1, 38, 70 } 
   } 
 }
 local correct_score8 = {
   1000,
   {
+    { "set_tempo", 0, 1000000 },
     { "note", 10, 11990, 1, 70, 115 },
     { "note", 10, 11990, 1, 66, 110 },
     { "note", 2010, 14010, 1, 62, 105 },
@@ -422,8 +426,8 @@ local correct_segment = {
     { "note", 10000, 11990, 1, 66, 110 },
     { "note", 12000, 14010, 1, 62, 105 },
     { "note", 14000, 16010, 1, 58, 100 },
-    { "patch_change", 5000, 1, 19 },
-    { "set_tempo", 5000, 1000000 } 
+    { "set_tempo", 5000, 1000000 }, 
+    { "patch_change", 5000, 1, 19 }
   } 
 }
 local correct_stats = {
@@ -534,7 +538,12 @@ local opus3 = MIDI.score2opus(score1)
 ok(equals(opus3, opus1) and equals(score1, correct_score), 'score2opus')
 
 local opus4 = MIDI.to_millisecs(opus1)
-ok(equals(opus4, correct_ms) and equals(opus1, opus), 'to_millisecs')
+ok(equals(opus4,correct_ms) and equals(opus1,opus), 'to_millisecs')
+--  warn('opus4='..DataDumper(opus4))
+--  warn('correct_ms='..DataDumper(correct_ms))
+--  warn('opus1='..DataDumper(opus1))
+--  warn('opus='..DataDumper(opus))
+
 
 local grep1 = MIDI.grep(score1, {4,7})
 ok(equals(grep1, correct_grep_score) and equals(score1, correct_score),
@@ -545,8 +554,13 @@ ok(equals(grep2, correct_grep_opus) and equals(opus1, opus), 'grep (opus)')
 
 local cat1 = MIDI.concatenate_scores({score1, score2})
 ok(equals(cat1, correct_cat1) and equals(score1, correct_score) and equals(score2, orig_score2), 'concatenate scores')
---ok(equals(score1, correct_score), 'original score1 unchanged')
---ok(equals(score2, orig_score2), 'original score2 unchanged')
+-- warn('score1='..DataDumper(score1))
+-- warn('to_millisecs(score1)='..DataDumper(MIDI.opus2score(MIDI.to_millisecs(MIDI.score2opus(score1)))))
+-- warn('score2='..DataDumper(score2))
+-- warn('cat1='..DataDumper(cat1))
+-- warn('correct_cat1='..DataDumper(correct_cat1))
+ok(equals(score1, correct_score), 'original score1 unchanged')
+ok(equals(score2, orig_score2), 'original score2 unchanged')
 
 local merge1 = MIDI.merge_scores({score1, score2})
 ok(equals(merge1, correct_merge1) and equals(score1, correct_score) and equals(score2, orig_score2), 'merge scores')
@@ -555,6 +569,8 @@ ok(equals(merge1, correct_merge1) and equals(score1, correct_score) and equals(s
 
 local mix1 = MIDI.mix_scores({score1, score2})
 ok(equals(mix1, correct_mix1) and equals(score1, correct_score) and equals(score2, orig_score2), 'mix scores')
+--warn('mix1='..DataDumper(mix1))
+--warn('correct_mix1='..DataDumper(correct_mix1))
 
 local mix_tracks = MIDI.mix_opus_tracks({track1, track2})
 ok(equals(mix_tracks, correct_mix_tracks), 'mix opus tracks')
@@ -579,11 +595,11 @@ local score4 = MIDI.timeshift{score2, shift=50}
 ok(equals(score4, correct_score4) and equals(score2, orig_score2),
  'timeshift {score, shift=50}')
 
-local score5 = MIDI.timeshift(score2, nil, 70)
+local score5 = MIDI.timeshift(score2, nil, 50)
 ok(equals(score5, correct_score4), 'timeshift (score, nil, start_time>0)')
 
-local score5 = MIDI.timeshift{score2, start_time=70}
-ok(equals(score5, correct_score4), 'timeshift {score, start_time=70}')
+local score5 = MIDI.timeshift{score2, start_time=50}
+ok(equals(score5, correct_score4), 'timeshift {score, start_time=50}')
 
 local score6 = MIDI.timeshift(score2, -100)
 ok(equals(score6, correct_score6), 'timeshift (score, shift<0)')
@@ -607,6 +623,10 @@ ok(equals(score10, correct_segment) and equals(score2, orig_score2),
 local score10 = MIDI.segment{score2, start_time=5000, end_time=15000}
 ok(equals(score10, correct_segment) and equals(score2, orig_score2),
  'segment {score, start_time=5000, end_time=15000}')
+
+-- warn('score10='..DataDumper(score10))
+-- warn('correct_segment='..DataDumper(correct_segment))
+-- os.exit()
 
 local merge1 = deepcopy(correct_merge1)
 local stats = MIDI.score2stats(merge1)
