@@ -3,6 +3,7 @@
 local M = {} -- public interface
 M.Version = 'VERSION'
 M.VersionDate = 'DATESTAMP'
+-- 20150921 6.5 segment restores controllers as well as patch and tempo
 -- 20150920 6.4 segment respects a set_tempo exactly on the start time
 -- 20150628 6.3 absent any set_tempo, default is 120bpm (see MIDI filespec 1.1)
 -- 20150422 6.2 works with lua5.3
@@ -1496,20 +1497,29 @@ function M.segment(...)
 	for i = 2,#score do   -- ignore ticks; we count in ticks anyway
 		if tracks[i-1] then
 			local new_track = {}
+			local channel2cc_num  = {} -- recentest controlchange before start
+			local channel2cc_val  = {}
+			local channel2cc_time = {}
 			local channel2patch_num = {} -- recentest patchchange before start
 			local channel2patch_time = {}
-			local set_tempo_num = 500010 -- recentest tempochange 6.3
+			local set_tempo_num = 500000 -- recentest tempochange 6.3
 			local set_tempo_time = 0
 			local earliest_note_time = endt
 			for k,event in ipairs(score[i]) do
-				if event[1] == 'patch_change' then
+				if event[1] == 'control_change' then  -- 6.5
+					local cc_time = channel2cc_time[event[3]] or 0
+					if event[2]<=start and event[2]>=cc_time then
+						channel2cc_num[event[3]]  = event[4]
+						channel2cc_val[event[3]]  = event[5]
+						channel2cc_time[event[3]] = event[2]
+					end
+				elseif event[1] == 'patch_change' then
 					local patch_time = channel2patch_time[event[3]] or 0 -- 4.7
 					if event[2]<=start and event[2]>=patch_time then  -- 2.0
 						channel2patch_num[event[3]]  = event[4]
 						channel2patch_time[event[3]] = event[2]
 					end
-				end
-				if event[1] == 'set_tempo' then   -- 6.4 <=start not <start
+				elseif event[1] == 'set_tempo' then   -- 6.4 <=start not <start
 					if (event[2]<=start) and (event[2]>=set_tempo_time) then
 						set_tempo_num  = event[3]
 						set_tempo_time = event[2]
@@ -1523,11 +1533,15 @@ function M.segment(...)
 				end
 			end
 			if #new_track > 0 then
+				new_track[#new_track+1] = ({'set_tempo', start, set_tempo_num})
 				for k,c in ipairs(sorted_keys(channel2patch_num)) do -- 4.3
 					new_track[#new_track+1] =
 					 ({'patch_change', start, c, channel2patch_num[c]})
 				end
-				new_track[#new_track+1] = ({'set_tempo', start, set_tempo_num})
+				for k,c in ipairs(sorted_keys(channel2cc_num)) do -- 6.5
+					new_track[#new_track+1] = ({'control_change', start, c,
+					  channel2cc_num[c],  channel2cc_val[c]})
+				end
 				new_score[#new_score+1] = (new_track)
 			end
 		end
