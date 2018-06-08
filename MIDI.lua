@@ -1,8 +1,9 @@
 #!/usr/bin/lua
 --require 'DataDumper'   -- http://lua-users.org/wiki/DataDumper
 local M = {} -- public interface
-M.Version = '5.7'
-M.VersionDate = '20120129'
+M.Version = '5.9'
+M.VersionDate = '20120504'
+-- 20120504 5.9 add the contents of mid_opus_tracks()
 -- 20111129 5.7 _encode handles empty tracks; score2stats num_notes_by_channel
 -- 20111111 5.6 fix patch 45 and 46 in Number2patch, should be Pizz and Harp
 -- 20110115 5.5 add mix_opus_tracks()
@@ -1046,6 +1047,17 @@ function M.merge_scores(scores)
 end
 
 function M.mix_opus_tracks(input_tracks) -- 5.5
+	-- must convert each track to absolute times !
+	local output_score = {1000, {}}
+	for ks,input_track in ipairs(input_tracks) do -- 5.8
+		local input_score = M.opus2score({1000, input_track})
+		for k,event in ipairs(input_score[2]) do
+			table.insert(output_score[2], event)
+		end
+	end
+	table.sort(output_score[2], function (e1,e2) return e1[2]<e2[2] end) 
+	local output_opus = M.score2opus(output_score)
+	return output_opus[2]
 end
 
 function M.mix_scores(input_scores)
@@ -1305,12 +1317,12 @@ end
 function M.score2stats(opus_or_score)
 --[[ returns a table:
  bank_select (array of 2-element arrays {msb,lsb}),
- num_notes_by_channel (table of numbers),
  channels_by_track (table, by track, of arrays),
  channels_total (array),
  general_midi_mode (array),
  ntracks,
  nticks,
+ num_notes_by_channel (table of numbers),
  patch_changes_by_track (table of tables),
  patch_changes_total (array),
  percussion (a dictionary histogram of channel-9 events),
@@ -1337,6 +1349,7 @@ function M.score2stats(opus_or_score)
 	if opus_or_score == nil then
 		return {bank_select={}, channels_by_track={}, channels_total={},
 		 general_midi_mode={}, ntracks=0, nticks=0,
+		 num_notes_by_channel={},
 		 patch_changes_by_track={}, patch_changes_total={},
 		 percussion={}, pitches={}, pitch_range_by_track={},
 		 ticks_per_quarter=0, pitch_range_sum=0

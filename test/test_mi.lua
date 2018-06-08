@@ -433,6 +433,7 @@ local correct_stats = {
   general_midi_mode={  },
   nticks=37490,
   ntracks=2,
+  num_notes_by_channel={ [0]=16, 2 },
   patch_changes_by_track={ { 74 }, { [0]=19 } },
   patch_changes_total={ 19, 74 },
   percussion={  },
@@ -461,6 +462,53 @@ local correct_stats = {
 local seq_opus = {
 	96,
 	{ {'set_sequence_number', 0, 63000}, }
+}
+
+local track1 = {
+	{'patch_change', 0, 1, 74},   -- and these are the events...
+	{'key_signature', 4, -2, 46},
+	{'time_signature', 3, 4, 5, 6, 7,},
+	{'set_tempo', 5, 1000000},
+	{'note_on', 5, 1, 55, 100},
+	{'key_after_touch', 7, 7, 8, 9},
+	{'channel_after_touch', 9, 11, 12},
+	{'pitch_wheel_change', 13, 14, -2100},
+	{'text_event', 16, 'some enchanted evening'},
+	{'note_off', 5, 1, 55, 100},
+}
+local track2 = {
+	{'patch_change', 1, 1, 74},   -- and these are the events...
+	{'key_signature', 4, -2, 46},
+	{'time_signature', 3, 4, 5, 6, 7,},
+	{'set_tempo', 5, 1000000},
+	{'note_on', 5, 1, 55, 100},
+	{'key_after_touch', 7, 7, 8, 9},
+	{'channel_after_touch', 9, 11, 12},
+	{'pitch_wheel_change', 13, 14, -2100},
+	{'text_event', 16, 'some enchanted evening'},
+	{'note_off', 5, 1, 55, 100},
+}
+local correct_mix_tracks = {
+	{'patch_change', 0, 1, 74},   -- and these are the events...
+	{'patch_change', 1, 1, 74},   -- and these are the events...
+	{'key_signature', 3, -2, 46},
+	{'key_signature', 1, -2, 46},
+	{'time_signature', 2, 4, 5, 6, 7,},
+	{'time_signature', 1, 4, 5, 6, 7,},
+	{'set_tempo', 4, 1000000},
+	{'set_tempo', 1, 1000000},
+	{'note_on', 4, 1, 55, 100},
+	{'note_on', 1, 1, 55, 100},
+	{'key_after_touch', 6, 7, 8, 9},
+	{'key_after_touch', 1, 7, 8, 9},
+	{'channel_after_touch', 8, 11, 12},
+	{'channel_after_touch', 1, 11, 12},
+	{'pitch_wheel_change', 12, 14, -2100},
+	{'pitch_wheel_change', 1, 14, -2100},
+	{'text_event', 15, 'some enchanted evening'},
+	{'text_event', 1, 'some enchanted evening'},
+	{'note_off', 4, 1, 55, 100},
+	{'note_off', 1, 1, 55, 100},
 }
 
 ----------------------------------------------------------------
@@ -508,6 +556,10 @@ ok(equals(merge1, correct_merge1) and equals(score1, correct_score) and equals(s
 local mix1 = MIDI.mix_scores({score1, score2})
 ok(equals(mix1, correct_mix1) and equals(score1, correct_score) and equals(score2, orig_score2), 'mix scores')
 
+local mix_tracks = MIDI.mix_opus_tracks({track1, track2})
+ok(equals(mix_tracks, correct_mix_tracks), 'mix opus tracks')
+
+local midi2 = MIDI.score2midi(score1)
 local midi2 = MIDI.score2midi(score1)
 ok(equals(midi2, correct_midi), 'score2midi')
 
@@ -560,8 +612,8 @@ local merge1 = deepcopy(correct_merge1)
 local stats = MIDI.score2stats(merge1)
 stats['pitches'] = nil
 correct_stats['pitches'] = nil
---print('stats='..DataDumper(stats))
---print('correct_stats='..DataDumper(correct_stats))
+-- print('stats='..DataDumper(stats))
+-- print('correct_stats='..DataDumper(correct_stats))
 ok(equals(stats, correct_stats) and equals(merge1, correct_merge1),
  'score2stats')
 
